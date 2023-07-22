@@ -4,16 +4,23 @@ import os
 from googleapiclient.discovery import build
 
 
-class Channel:
-    """Класс для ютуб-канала"""
+class MixinYT:
     API_KEY = os.getenv('YT_API_KEY')
     youtube = build('youtube', 'v3', developerKey=API_KEY)
+
+    @classmethod
+    def get_service(cls):
+        return cls.youtube
+
+
+class Channel(MixinYT):
+    """Класс для ютуб-канала"""
 
     def __init__(self, channel_id: str) -> None:
         """Экземпляр инициализируется id канала.
         Дальше все данные будут подтягиваться по API."""
         self.__channel_id = channel_id
-        self.channel = self.youtube.channels().list(id=self.channel_id, part='snippet,statistics').execute()
+        self.channel = self.get_service().channels().list(id=self.channel_id, part='snippet,statistics').execute()
         self.id = self.channel['items'][0]['id']
         self.title = self.channel['items'][0]['snippet']['title']
         self.description = self.channel['items'][0]['snippet']['description']
@@ -41,9 +48,9 @@ class Channel:
     def channel_id(self):
         return self.__channel_id
 
-    @classmethod
-    def get_service(cls):
-        return cls.youtube
+    # @classmethod
+    # def get_service(cls):
+    #     return cls.youtube
 
     def print_info(self) -> None:
         """Выводит в консоль информацию о канале."""
