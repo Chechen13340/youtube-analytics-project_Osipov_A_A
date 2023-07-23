@@ -48,10 +48,6 @@ class Channel(MixinYT):
     def channel_id(self):
         return self.__channel_id
 
-    # @classmethod
-    # def get_service(cls):
-    #     return cls.youtube
-
     def print_info(self) -> None:
         """Выводит в консоль информацию о канале."""
         print(json.dumps(self.channel, indent=2))
