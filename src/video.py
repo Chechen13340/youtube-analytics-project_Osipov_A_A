@@ -1,11 +1,11 @@
-from src.channel import Channel
+from src.channel import MixinYT
 
 
-class Video(Channel):
+class Video(MixinYT):
 
     def __init__(self, id_video):
         self.id_video = id_video
-        self.video = self.youtube.videos().list(id=self.id_video, part='snippet,statistics').execute()
+        self.video = self.get_service().videos().list(id=self.id_video, part='snippet,statistics').execute()
         self.title_video = self.video['items'][0]['snippet']['title']
         self.video_url = self.video['items'][0]['snippet']['thumbnails']['default']['url']
         self.video_view_count = self.video['items'][0]['statistics']['viewCount']
